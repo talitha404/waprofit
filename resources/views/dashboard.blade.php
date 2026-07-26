@@ -23,7 +23,8 @@
             </section>
 
             <section class="grid gap-4 sm:grid-cols-3">
-                <a href="#" class="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-red-200 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-red-500">
+                <!-- todo: implementasikan fitur kalkulator dibawh ini sesuai file PRD.md -->
+                <a href="{{ route('calculator.index') }}" class="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-red-200 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-red-500">
                     <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-red-50 text-red-600"><svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v18m0-13.5h12.5l-1.5 3 1.5 3H3.75" /></svg></span>
                     <h3 class="mt-4 font-semibold text-slate-900">Kalkulasi Baru</h3>
                     <p class="mt-1 text-sm leading-5 text-slate-500">Hitung PPN, PPh 23, fee, dan estimasi laba.</p>

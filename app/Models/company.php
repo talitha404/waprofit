@@ -25,4 +25,9 @@ class Company extends Model
     {
         return $this->hasMany(Document::class);
     }
+
+    public function calculations(): HasMany
+    {
+        return $this->hasMany(Calculation::class);
+    }
 }

@@ -1,10 +1,11 @@
 <?php
 
+use App\Http\Controllers\CalculatorController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TemplateController;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
 // Route default dari Laravel Breeze
 Route::get('/', function () {
@@ -21,6 +22,9 @@ Route::get('/dashboard', function () {
 
 // Grup utama untuk semua route yang memerlukan otentikasi
 Route::middleware('auth')->group(function () {
+    Route::get('/calculator', [CalculatorController::class, 'index'])->name('calculator.index');
+    Route::post('/calculator/history', [CalculatorController::class, 'store'])->name('calculator.store');
+    Route::post('/calculator/pdf', [CalculatorController::class, 'pdf'])->name('calculator.pdf');
     // Route untuk profile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -29,8 +33,8 @@ Route::middleware('auth')->group(function () {
     // --- Grup untuk Admin ---
     // Hanya user dengan role 'admin' yang bisa mengakses route di dalam grup ini.
     Route::middleware('role:admin')->name('admin.')->prefix('admin')->group(function () {
-        Route::get('/dashboard', function() {
-            return "<h1>Admin Dashboard</h1>"; // Placeholder
+        Route::get('/dashboard', function () {
+            return '<h1>Admin Dashboard</h1>'; // Placeholder
         })->name('dashboard');
 
         // CRUD untuk Templates
@@ -40,10 +44,10 @@ Route::middleware('auth')->group(function () {
     // --- Grup untuk Staff ---
     // Hanya user dengan role 'staff' yang bisa mengakses route di dalam grup ini.
     Route::middleware('role:staff')->name('staff.')->prefix('staff')->group(function () {
-        Route::get('/dashboard', function() {
-            return "<h1>Staff Dashboard</h1>"; // Placeholder
+        Route::get('/dashboard', function () {
+            return '<h1>Staff Dashboard</h1>'; // Placeholder
         })->name('dashboard');
-        
+
         // CRUD untuk Documents
         Route::resource('documents', DocumentController::class);
     });

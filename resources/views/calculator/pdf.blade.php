@@ -1,0 +1,17 @@
+@php
+    $rupiah = fn ($value) => 'Rp'.number_format((int) $value, 0, ',', '.');
+@endphp
+<!DOCTYPE html>
+<html lang="id">
+<head><meta charset="utf-8"><style>
+    @page { margin: 28px 32px; } body { font-family: DejaVu Sans, sans-serif; color: #1e293b; font-size: 10px; line-height: 1.5; } h1 { font-size: 21px; margin: 4px 0; } h2 { font-size: 12px; margin: 20px 0 8px; color: #991b1b; } .muted { color: #64748b; } .brand { color: #dc2626; font-weight: bold; } .meta { margin-top: 3px; } table { width: 100%; border-collapse: collapse; } th { text-align: left; color: #64748b; font-weight: normal; } td, th { padding: 7px 0; border-bottom: 1px solid #e2e8f0; } td:last-child, th:last-child { text-align: right; } .summary { background: #f0fdf4; border: 1px solid #bbf7d0; padding: 14px; margin-top: 16px; } .summary strong { color: #166534; font-size: 16px; } .badge { display: inline-block; padding: 3px 7px; background: #fef3c7; color: #92400e; border-radius: 8px; font-size: 9px; } .warning { background: #fffbeb; color: #92400e; padding: 9px; margin-top: 12px; } .footer { position: fixed; bottom: -10px; font-size: 8px; color: #64748b; }
+</style></head>
+<body>
+    <div class="brand">{{ $companyName }}</div><h1>{{ $title }}</h1><div class="muted meta">Dibuat {{ $generatedAt->translatedFormat('d F Y, H:i') }} WIB · Estimasi operasional</div>
+    <h2>Data transaksi</h2><table><tr><th>Client / Pemilik Barang</th><td>{{ $input['client_name'] ?: '—' }}</td></tr><tr><th>DPP Client</th><td>{{ $rupiah($result['client_dpp']) }}</td></tr><tr><th>Vendor / Pemilik Kapal</th><td>{{ $input['vendor_name'] ?: '—' }}</td></tr><tr><th>DPP Vendor</th><td>{{ $rupiah($result['vendor_dpp']) }}</td></tr><tr><th>Selisih DPP</th><td><strong>{{ $rupiah($result['selisih_dpp']) }}</strong></td></tr></table>
+    <h2>PPN dan PPh 23</h2><table><tr><th>PPN Keluaran ({{ $result['rates']['ppn'] }}%)</th><td>{{ $rupiah($result['ppn_keluaran']) }}</td></tr><tr><th>PPN Masukan ({{ $result['rates']['ppn'] }}%)</th><td>{{ $rupiah($result['ppn_masukan']) }}</td></tr><tr><th>Posisi PPN</th><td>{{ $rupiah($result['posisi_ppn']) }} <span class="badge">{{ $result['status_ppn'] }}</span></td></tr><tr><th>PPh 23 penerimaan ({{ $result['rates']['pph_23'] }}%)</th><td>{{ $rupiah($result['pph_23_penerimaan']) }}</td></tr><tr><th>PPh 23 pembayaran vendor ({{ $result['rates']['pph_23'] }}%)</th><td>{{ $rupiah($result['pph_23_vendor']) }}</td></tr></table>
+    <h2>Fee broker jaringan</h2><table><tr><th>Broker / Jenis fee</th><th>Bruto</th><th>PPh 23</th><th>Netto</th></tr>@forelse($result['fees'] as $fee)<tr><td>{{ $fee['name'] ?: 'Broker' }} · {{ $fee['fee_type'] === 'persentase' ? $fee['fee_value'].'%' : 'Nominal' }}</td><td>{{ $rupiah($fee['gross']) }}</td><td>{{ $rupiah($fee['pph_23']) }}</td><td>{{ $rupiah($fee['net']) }}</td></tr>@empty<tr><td colspan="4" class="muted">Tidak ada fee broker.</td></tr>@endforelse<tr><th>Total</th><th>{{ $rupiah($result['total_fee_bruto']) }}</th><th>{{ $rupiah($result['total_pph_broker']) }}</th><th>{{ $rupiah($result['total_fee_netto']) }}</th></tr></table>
+    <div class="summary"><span class="muted">Estimasi laba bersih setelah PPN terutang dan fee netto</span><br><strong>{{ $rupiah($result['estimasi_laba_bersih']) }}</strong></div>
+    @foreach($result['warnings'] as $warning)<div class="warning">{{ $warning }}</div>@endforeach
+    <div class="footer">Kalkulator ini merupakan estimasi operasional, bukan nasihat pajak. PPh 23 ditampilkan sebagai informasi karena perlakuannya bergantung pada transaksi.</div>
+</body></html>
